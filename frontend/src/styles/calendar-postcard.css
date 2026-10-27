@@ -1,0 +1,428 @@
+/* ==========================================================================
+   SkyLark — Calendar Postcard Component Styles
+   Aesthetic vintage aviation travel-card date picker
+   ========================================================================== */
+
+/* ── MODAL / POPOVER OVERLAY ────────────────────────────────────────────── */
+.postcard-calendar-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(15, 25, 45, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: postcardFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes postcardFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ── POSTCARD CARD CONTAINER ────────────────────────────────────────────── */
+.postcard-calendar-card {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+  background: #fbf8f3;
+  background-image: radial-gradient(#e5dbcb 0.65px, transparent 0.65px);
+  background-size: 14px 14px;
+  border-radius: 20px;
+  border: 1px solid #e8decb;
+  box-shadow:
+    0 24px 50px -12px rgba(35, 25, 15, 0.35),
+    0 6px 16px rgba(0, 0, 0, 0.08),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.85);
+  overflow: hidden;
+  padding: 14px 14px 16px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #2b231c;
+  animation: postcardPopUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  transform-origin: center center;
+  user-select: none;
+}
+
+@keyframes postcardPopUp {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* ── TOP PHOTO FRAME (Monthly changing artwork) ─────────────────────────── */
+.postcard-photo-frame {
+  position: relative;
+  width: 100%;
+  height: 190px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #202b38;
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, 0.15),
+    0 4px 14px rgba(40, 30, 20, 0.15);
+}
+
+.postcard-image-wrapper {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.postcard-image-active {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+}
+
+.postcard-slide-right {
+  opacity: 0;
+  transform: translateX(20px) scale(0.96);
+}
+
+.postcard-slide-left {
+  opacity: 0;
+  transform: translateX(-20px) scale(0.96);
+}
+
+.postcard-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.postcard-photo-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.1) 0%,
+    transparent 40%,
+    rgba(0, 0, 0, 0.25) 100%
+  );
+  pointer-events: none;
+}
+
+.postcard-photo-shine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 45%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.18) 0%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* ── POSTAGE STAMP BADGE ────────────────────────────────────────────────── */
+.postcard-postage-stamp {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(4px);
+  border: 1px dashed #bfa588;
+  border-radius: 6px;
+  padding: 3px 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  pointer-events: none;
+}
+
+.postcard-stamp-icon {
+  font-size: 11px;
+  color: #c85a32;
+}
+
+.postcard-stamp-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: #5c4433;
+}
+
+/* ── MONTH NAVIGATION BUTTONS ───────────────────────────────────────────── */
+.postcard-nav-overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 8px;
+  pointer-events: none;
+}
+
+.postcard-nav-btn {
+  pointer-events: auto;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(220, 205, 190, 0.8);
+  color: #3b2c20;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.postcard-nav-btn:hover {
+  background: #ffffff;
+  color: #c85a32;
+  transform: scale(1.1);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+}
+
+.postcard-nav-btn:active {
+  transform: scale(0.95);
+}
+
+/* ── CARD BODY ──────────────────────────────────────────────────────────── */
+.postcard-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 4px;
+}
+
+/* ── MONTH & YEAR TITLE ROW ─────────────────────────────────────────────── */
+.postcard-month-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 2px 2px 0 2px;
+}
+
+.postcard-month-left {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.postcard-month-title {
+  margin: 0;
+  font-family: 'DM Serif Display', 'Playfair Display', Georgia, serif;
+  font-size: 26px;
+  font-weight: 400;
+  color: #241a14;
+  letter-spacing: -0.3px;
+  line-height: 1.1;
+}
+
+.postcard-month-full {
+  font-size: 12px;
+  font-weight: 500;
+  color: #8c7865;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.postcard-year-title {
+  font-family: 'DM Serif Display', 'Playfair Display', Georgia, serif;
+  font-size: 16px;
+  color: #8c7865;
+  letter-spacing: 0.5px;
+}
+
+/* ── WEEKDAY HEADER (S M T W T F S) ─────────────────────────────────────── */
+.postcard-weekday-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  padding-bottom: 2px;
+  border-bottom: 1px dashed #e2d7c5;
+}
+
+.postcard-weekday-col {
+  font-size: 11px;
+  font-weight: 700;
+  color: #877461;
+  padding: 4px 0;
+  letter-spacing: 0.5px;
+}
+
+.postcard-weekday--sunday {
+  color: #c85a32; /* Warm terracotta matching reference */
+}
+
+/* ── DATE NUMBERS GRID ──────────────────────────────────────────────────── */
+.postcard-date-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  padding-top: 2px;
+}
+
+.postcard-day-cell {
+  position: relative;
+  aspect-ratio: 1;
+  border: none;
+  background: transparent;
+  border-radius: 50%;
+  font-size: 13px;
+  font-weight: 500;
+  color: #3b2c20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 0;
+}
+
+.postcard-day-cell--empty {
+  pointer-events: none;
+}
+
+.postcard-day-cell--sunday {
+  color: #c85a32;
+}
+
+.postcard-day-cell:hover:not(:disabled) {
+  background: #f0e6d6;
+  color: #1a120c;
+  transform: scale(1.08);
+}
+
+.postcard-day-cell:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+/* Selected Date - Warm Vintage Terracotta Badge */
+.postcard-day-cell--selected {
+  background: #c85a32 !important;
+  color: #ffffff !important;
+  font-weight: 700;
+  box-shadow: 0 4px 10px rgba(200, 90, 50, 0.4);
+  transform: scale(1.05);
+}
+
+/* Today's Date Indicator */
+.postcard-day-cell--today:not(.postcard-day-cell--selected) {
+  font-weight: 700;
+  color: #1a120c;
+}
+
+.postcard-today-dot {
+  position: absolute;
+  bottom: 3px;
+  width: 3.5px;
+  height: 3.5px;
+  background: #c85a32;
+  border-radius: 50%;
+}
+
+/* Disabled dates (past dates) */
+.postcard-day-cell--disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ── POSTCARD FOOTER (Handwritten Quote & Cute Doodle) ───────────────────── */
+.postcard-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(220, 205, 190, 0.45);
+}
+
+.postcard-doodle {
+  font-size: 13px;
+  color: #c85a32;
+  opacity: 0.75;
+}
+
+.postcard-quote {
+  font-family: 'Caveat', 'Comic Sans MS', cursive, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #7d6b58;
+  letter-spacing: 0.2px;
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 260px;
+}
+
+/* ── CLOSE BUTTON (Floating top right) ──────────────────────────────────── */
+.postcard-close-btn {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #241a14;
+  color: #fff;
+  border: 2px solid #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  transition: all 0.15s ease;
+  z-index: 10;
+}
+
+.postcard-close-btn:hover {
+  background: #c85a32;
+  transform: scale(1.1);
+}
+
+/* ── RESPONSIVENESS ─────────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .postcard-calendar-card {
+    max-width: 320px;
+    padding: 12px 12px 14px 12px;
+  }
+  .postcard-photo-frame {
+    height: 165px;
+  }
+  .postcard-month-title {
+    font-size: 22px;
+  }
+  .postcard-day-cell {
+    font-size: 12px;
+  }
+  .postcard-quote {
+    font-size: 13px;
+    max-width: 220px;
+  }
+}

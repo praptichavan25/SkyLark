@@ -1,0 +1,1596 @@
+/* ==========================================================================
+   SkyLark — Screen 3: Flight Search Sky
+   Premium sky-themed flight search with glassmorphism UI.
+   Continues the sky environment from Screen 2.
+   Typography: DM Serif Display (hero) + DM Sans (all UI text)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   CSS CUSTOM PROPERTIES — Sky Search Theme
+   -------------------------------------------------------------------------- */
+:root {
+  --sky-deep:           #071d36;
+  --sky-navy:           #0e2a4d;
+  --sky-mid:            #174878;
+  --sky-light:          #3c8bc8;
+  --sky-pale:           #8cc2ea;
+  --sky-cloud:          #f2f8fc;
+  --sky-white:          #ffffff;
+  --sky-text-primary:   #0d2238;
+  --sky-text-secondary: #4a637d;
+  --sky-text-muted:     #849cb5;
+  --sky-glass-bg:       rgba(255, 255, 255, 0.72);
+  --sky-glass-border:   rgba(255, 255, 255, 0.85);
+  --sky-glass-subtle:   rgba(255, 255, 255, 0.45);
+  --sky-accent:         #0a5296;
+  --sky-accent-hover:   #063b6e;
+  --sky-accent-bright:  #2989e3;
+  --sky-gold:           #c8a96e;
+  --sky-shadow-sm:      0 8px 24px rgba(11, 38, 70, 0.08);
+  --sky-shadow-lg:      0 20px 60px rgba(7, 29, 54, 0.16), 0 4px 16px rgba(7, 29, 54, 0.08);
+  --sky-font-display:   'DM Serif Display', Georgia, serif;
+  --sky-font-sans:      'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --sky-error:          #d93838;
+}
+
+/* ==========================================================================
+   TRANSITION ZONE: Screen 2 Full Sky → Screen 3 Sky Environment
+   ========================================================================== */
+.sky-transition-zone {
+  position: relative;
+  width: 100%;
+  height: 120px;
+  background: linear-gradient(
+    to bottom,
+    rgba(184, 205, 216, 0.95) 0%,
+    rgba(142, 195, 232, 0.85) 40%,
+    rgba(90, 159, 212, 0.4) 80%,
+    transparent 100%
+  );
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.sky-transition-cloud-blur {
+  position: absolute;
+  inset: 0;
+  backdrop-filter: blur(8px);
+  mask-image: linear-gradient(to bottom, black 30%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 30%, transparent 100%);
+}
+
+.sky-transition-horizon-line {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    transparent 100%
+  );
+}
+
+/* ==========================================================================
+   MAIN SCREEN 3 WORLD
+   ========================================================================== */
+.sky-world {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 32px 100px;
+  box-sizing: border-box;
+  font-family: var(--sky-font-sans);
+  color: var(--sky-text-primary);
+}
+
+/* ==========================================================================
+   ANIMATED SKY BACKGROUND LAYERS
+   ========================================================================== */
+.sky-bg-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.sky-gradient-base {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+      ellipse 120% 80% at 50% 10%,
+      #e3f1fc 0%,
+      #c4e1f7 35%,
+      #8dbfe4 65%,
+      #4e91c7 100%
+    );
+}
+
+.sky-clouds {
+  position: absolute;
+  width: 200%;
+  height: 100%;
+  background-repeat: repeat-x;
+  pointer-events: none;
+}
+
+.sky-clouds-1 {
+  top: 10%;
+  left: -20%;
+  height: 140px;
+  background: 
+    radial-gradient(ellipse 220px 60px at 15% 50%, rgba(255,255,255,0.45) 0%, transparent 70%),
+    radial-gradient(ellipse 280px 75px at 45% 60%, rgba(255,255,255,0.35) 0%, transparent 70%),
+    radial-gradient(ellipse 240px 65px at 75% 45%, rgba(255,255,255,0.4) 0%, transparent 70%);
+  animation: sky-clouds-drift 70s linear infinite;
+  filter: blur(14px);
+}
+
+.sky-clouds-2 {
+  top: 35%;
+  left: -10%;
+  height: 120px;
+  background:
+    radial-gradient(ellipse 180px 50px at 20% 50%, rgba(255,255,255,0.3) 0%, transparent 70%),
+    radial-gradient(ellipse 260px 70px at 60% 55%, rgba(255,255,255,0.25) 0%, transparent 70%),
+    radial-gradient(ellipse 200px 50px at 85% 45%, rgba(255,255,255,0.3) 0%, transparent 70%);
+  animation: sky-clouds-drift 90s linear infinite reverse;
+  filter: blur(18px);
+}
+
+.sky-clouds-3 {
+  bottom: 5%;
+  left: -15%;
+  height: 220px;
+  background:
+    radial-gradient(ellipse 350px 90px at 25% 60%, rgba(255,255,255,0.35) 0%, transparent 70%),
+    radial-gradient(ellipse 400px 100px at 65% 70%, rgba(255,255,255,0.3) 0%, transparent 70%);
+  animation: sky-clouds-drift 110s linear infinite;
+  filter: blur(24px);
+}
+
+@keyframes sky-clouds-drift {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.sky-sun-glow {
+  position: absolute;
+  top: -10%;
+  right: 15%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 245, 210, 0.4) 0%,
+    rgba(255, 235, 180, 0.15) 35%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.sky-atmosphere-haze {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 25%;
+  background: linear-gradient(
+    to top,
+    rgba(255, 255, 255, 0.35) 0%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   NAVIGATION BAR
+   ========================================================================== */
+.sky-nav {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 1240px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 0 16px;
+}
+
+.sky-nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.sky-brand-symbol {
+  font-size: 18px;
+  color: var(--sky-accent);
+}
+
+.sky-brand-name {
+  font-family: var(--sky-font-sans);
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--sky-navy);
+}
+
+.sky-brand-name span {
+  font-weight: 300;
+  color: var(--sky-accent-bright);
+}
+
+.sky-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 5px 8px;
+  border-radius: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 4px 16px rgba(11, 38, 70, 0.05);
+}
+
+.sky-nav-tab {
+  background: transparent;
+  border: none;
+  font-family: var(--sky-font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--sky-navy);
+  padding: 8px 18px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.22s ease;
+}
+
+.sky-nav-tab:hover {
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--sky-accent);
+}
+
+.sky-nav-tab--active {
+  background: #ffffff;
+  color: var(--sky-accent);
+  box-shadow: 0 3px 12px rgba(11, 38, 70, 0.08);
+}
+
+.sky-nav-actions {
+  display: flex;
+  align-items: center;
+}
+
+.sky-badge-flock {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--sky-navy);
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  padding: 6px 14px;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+}
+
+/* ==========================================================================
+   HERO SECTION (AIRCRAFT + FLOATING BADGES + HEADLINE)
+   ========================================================================== */
+.sky-hero {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  max-width: 1240px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 10px;
+  padding-bottom: 24px;
+}
+
+/* AIRCRAFT STAGE */
+.sky-aircraft-stage {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  height: 290px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: -15px;
+}
+
+.sky-aircraft-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: sky-aircraft-float 7s ease-in-out infinite;
+}
+
+.sky-aircraft-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 24px;
+  box-shadow: 0 24px 60px rgba(14, 42, 77, 0.22);
+  mask-image: radial-gradient(ellipse 95% 85% at 50% 50%, black 65%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 95% 85% at 50% 50%, black 65%, transparent 100%);
+  transition: transform 0.5s ease;
+}
+
+.sky-aircraft-glass-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(10, 82, 150, 0.15) 100%
+  );
+  pointer-events: none;
+}
+
+@keyframes sky-aircraft-float {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(0.6deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+/* FLOATING STATS: LEFT SIDE */
+.sky-floating-stats {
+  position: absolute;
+  left: 0;
+  top: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 8;
+}
+
+.sky-stat-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.68);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  padding: 10px 18px;
+  border-radius: 16px;
+  box-shadow: var(--sky-shadow-sm);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s;
+}
+
+.sky-stat-badge:hover {
+  transform: translateX(6px);
+  box-shadow: 0 12px 32px rgba(11, 38, 70, 0.12);
+}
+
+.sky-badge-icon {
+  font-size: 18px;
+  color: var(--sky-accent);
+}
+
+.sky-badge-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.sky-badge-number {
+  font-family: var(--sky-font-sans);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--sky-navy);
+  line-height: 1.1;
+}
+
+.sky-badge-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--sky-text-secondary);
+}
+
+/* FLOATING RATING BADGE: RIGHT SIDE */
+.sky-floating-rating {
+  position: absolute;
+  right: 0;
+  top: 100px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(255, 255, 255, 0.68);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  padding: 12px 18px;
+  border-radius: 18px;
+  box-shadow: var(--sky-shadow-sm);
+  z-index: 8;
+  transition: transform 0.3s ease;
+}
+
+.sky-floating-rating:hover {
+  transform: translateY(-4px);
+}
+
+.sky-avatar-stack {
+  display: flex;
+  align-items: center;
+}
+
+.sky-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  margin-left: -8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.sky-avatar:first-child {
+  margin-left: 0;
+}
+
+.sky-avatar-more {
+  background: #395270;
+}
+
+.sky-rating-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.sky-stars-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sky-star {
+  color: #f5a623;
+  font-size: 14px;
+}
+
+.sky-rating-val {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--sky-navy);
+}
+
+.sky-rating-count {
+  font-size: 11px;
+  color: var(--sky-text-secondary);
+}
+
+.sky-rating-sub {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--sky-accent);
+  text-transform: uppercase;
+}
+
+/* HERO HEADLINE */
+.sky-hero-text {
+  text-align: center;
+  max-width: 780px;
+  margin-top: 10px;
+}
+
+.sky-hero-heading {
+  font-family: var(--sky-font-display);
+  font-size: clamp(32px, 4.5vw, 54px);
+  font-weight: 400;
+  line-height: 1.12;
+  color: var(--sky-navy);
+  margin: 0 0 12px;
+  letter-spacing: -0.01em;
+}
+
+.sky-hero-heading-em {
+  color: var(--sky-accent);
+  font-style: italic;
+}
+
+.sky-hero-sub {
+  font-size: clamp(14px, 1.6vw, 17px);
+  font-weight: 400;
+  line-height: 1.5;
+  color: #385574;
+  margin: 0;
+}
+
+/* ==========================================================================
+   SEARCH CONSOLE WRAPPER & GLASS CONTAINER
+   ========================================================================== */
+.sky-console-wrapper {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 1180px;
+  margin-top: 24px;
+}
+
+.sky-console {
+  position: relative;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  border-radius: 28px;
+  padding: 20px 24px;
+  box-shadow: var(--sky-shadow-lg);
+  box-sizing: border-box;
+}
+
+/* CONSOLE TOPBAR */
+.sky-console-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 16px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(10, 82, 150, 0.08);
+}
+
+.sky-topbar-pills {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sky-topbar-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid transparent;
+  font-family: var(--sky-font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--sky-text-secondary);
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sky-topbar-pill:hover {
+  background: rgba(10, 82, 150, 0.04);
+  color: var(--sky-navy);
+}
+
+.sky-topbar-pill--active {
+  background: rgba(10, 82, 150, 0.08);
+  border-color: rgba(10, 82, 150, 0.16);
+  color: var(--sky-accent);
+}
+
+.sky-pill-icon {
+  font-size: 13px;
+}
+
+.sky-topbar-options {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sky-triptype-toggle {
+  display: flex;
+  background: rgba(10, 82, 150, 0.05);
+  padding: 3px;
+  border-radius: 20px;
+}
+
+.sky-triptype-btn {
+  background: transparent;
+  border: none;
+  font-family: var(--sky-font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--sky-text-secondary);
+  padding: 5px 12px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.sky-triptype-btn--active {
+  background: #ffffff;
+  color: var(--sky-accent);
+  box-shadow: 0 2px 6px rgba(10, 82, 150, 0.1);
+}
+
+/* CABIN CLASS CONTROL */
+.sky-class-control {
+  position: relative;
+}
+
+.sky-option-select-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(10, 82, 150, 0.05);
+  border: 1px solid rgba(10, 82, 150, 0.1);
+  font-family: var(--sky-font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--sky-navy);
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.18s ease;
+}
+
+.sky-option-select-btn:hover {
+  background: rgba(10, 82, 150, 0.1);
+}
+
+.sky-select-caret {
+  font-size: 10px;
+  opacity: 0.6;
+}
+
+.sky-class-modal {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 170px;
+  background: #ffffff;
+  border: 1px solid rgba(10, 82, 150, 0.12);
+  border-radius: 14px;
+  box-shadow: 0 12px 32px rgba(11, 38, 70, 0.14);
+  padding: 6px;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sky-class-opt {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: transparent;
+  border: none;
+  font-family: var(--sky-font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--sky-text-primary);
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s ease;
+}
+
+.sky-class-opt:hover {
+  background: rgba(10, 82, 150, 0.05);
+}
+
+.sky-class-opt--active {
+  background: rgba(10, 82, 150, 0.08);
+  font-weight: 600;
+  color: var(--sky-accent);
+}
+
+.sky-opt-check {
+  color: var(--sky-accent);
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   STATUS / VALIDATION BAR
+   ========================================================================== */
+.sky-status-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(10, 82, 150, 0.05);
+  border-left: 3px solid var(--sky-accent);
+  padding: 8px 14px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--sky-accent);
+  animation: sky-fade-in 0.25s ease;
+}
+
+.sky-status-bar--error {
+  background: rgba(217, 56, 56, 0.06);
+  border-left-color: var(--sky-error);
+  color: var(--sky-error);
+}
+
+.sky-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+@keyframes sky-fade-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   MAIN FIELDS ROW
+   ========================================================================== */
+.sky-console-fields {
+  display: grid;
+  grid-template-columns: 1.15fr auto 1.15fr auto 1fr auto 1fr auto;
+  align-items: stretch;
+  background: #fbfdff;
+  border: 1px solid rgba(10, 82, 150, 0.1);
+  border-radius: 20px;
+  padding: 4px;
+}
+
+/* FIELD HEADER */
+.sky-field-header-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.sky-field-icon {
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.sky-field-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--sky-text-muted);
+}
+
+/* AIRPORT SELECTOR FIELD */
+.sky-airport-field {
+  position: relative;
+  padding: 14px 18px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sky-airport-field:hover {
+  background: rgba(10, 82, 150, 0.03);
+}
+
+.sky-airport-field--active {
+  background: #ffffff;
+  box-shadow: 0 4px 16px rgba(10, 82, 150, 0.08);
+}
+
+.sky-airport-field--error {
+  background: rgba(217, 56, 56, 0.04);
+  box-shadow: inset 0 0 0 1px rgba(217, 56, 56, 0.4);
+}
+
+.sky-field-main {
+  outline: none;
+}
+
+.sky-field-city-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.sky-field-text-group {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.sky-field-city {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--sky-navy);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sky-field-airport-name {
+  font-size: 11px;
+  color: var(--sky-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+}
+
+.sky-field-iata {
+  font-family: var(--sky-font-sans);
+  font-size: 24px;
+  font-weight: 300;
+  letter-spacing: 0.05em;
+  color: var(--sky-accent);
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.sky-field-input {
+  font-family: var(--sky-font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--sky-navy);
+  background: transparent;
+  border: none;
+  outline: none;
+  width: 100%;
+  padding: 0;
+  caret-color: var(--sky-accent);
+}
+
+.sky-field-input::placeholder {
+  color: #a4b8cb;
+  font-weight: 400;
+}
+
+/* ==========================================================================
+   DROPDOWN MODAL FOR AIRPORTS
+   ========================================================================== */
+.sky-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 360px;
+  background: #ffffff;
+  border: 1px solid rgba(10, 82, 150, 0.12);
+  border-radius: 18px;
+  box-shadow: 0 16px 40px rgba(11, 38, 70, 0.18);
+  padding: 12px;
+  z-index: 100;
+  animation: sky-dropdown-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes sky-dropdown-in {
+  from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.sky-dropdown-quick-picks {
+  padding: 4px 8px 10px;
+  border-bottom: 1px solid rgba(10, 82, 150, 0.08);
+  margin-bottom: 8px;
+}
+
+.sky-quick-picks-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--sky-text-muted);
+  display: block;
+  margin-bottom: 6px;
+}
+
+.sky-quick-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.sky-quick-chip {
+  background: rgba(10, 82, 150, 0.06);
+  border: 1px solid rgba(10, 82, 150, 0.1);
+  font-family: var(--sky-font-sans);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--sky-accent);
+  padding: 4px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sky-quick-chip:hover {
+  background: var(--sky-accent);
+  color: #ffffff;
+}
+
+.sky-quick-chip--active {
+  background: var(--sky-navy);
+  color: #ffffff;
+}
+
+.sky-dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 8px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--sky-text-muted);
+}
+
+.sky-dropdown-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.sky-dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.sky-dropdown-item:hover,
+.sky-dropdown-item--active {
+  background: rgba(10, 82, 150, 0.06);
+}
+
+.sky-dropdown-item-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.sky-dropdown-city {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--sky-navy);
+}
+
+.sky-dropdown-airport-name {
+  font-size: 11px;
+  color: var(--sky-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 240px;
+}
+
+.sky-dropdown-code {
+  font-family: var(--sky-font-sans);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--sky-accent);
+}
+
+.sky-dropdown-empty {
+  padding: 16px 10px;
+  font-size: 12px;
+  color: var(--sky-text-muted);
+  text-align: center;
+}
+
+/* ==========================================================================
+   SWAP BUTTON
+   ========================================================================== */
+.sky-swap-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}
+
+.sky-swap-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid rgba(10, 82, 150, 0.14);
+  color: var(--sky-accent);
+  box-shadow: 0 4px 12px rgba(10, 82, 150, 0.08);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.sky-swap-btn:hover:not(:disabled) {
+  background: var(--sky-accent);
+  color: #ffffff;
+  transform: rotate(180deg) scale(1.08);
+  box-shadow: 0 6px 16px rgba(10, 82, 150, 0.2);
+}
+
+.sky-swap-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.sky-swap-btn--animating {
+  transform: rotate(180deg) scale(1.15);
+}
+
+.sky-swap-icon {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* ==========================================================================
+   FIELD DIVIDER
+   ========================================================================== */
+.sky-field-divider {
+  width: 1px;
+  margin: 12px 0;
+  background: rgba(10, 82, 150, 0.08);
+}
+
+/* ==========================================================================
+   DEPARTURE DATE FIELD
+   ========================================================================== */
+.sky-date-field {
+  position: relative;
+  padding: 14px 18px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.sky-date-field:hover {
+  background: rgba(10, 82, 150, 0.03);
+}
+
+.sky-date-field--error {
+  background: rgba(217, 56, 56, 0.04);
+  box-shadow: inset 0 0 0 1px rgba(217, 56, 56, 0.4);
+}
+
+.sky-date-display {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.sky-date-text-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.sky-date-value {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--sky-navy);
+}
+
+.sky-date-sub {
+  font-size: 11px;
+  color: var(--sky-text-secondary);
+  margin-top: 2px;
+}
+
+.sky-date-picker-icon {
+  font-size: 16px;
+  opacity: 0.5;
+}
+
+.sky-date-input-hidden {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+.sky-date-shortcuts {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.sky-date-chip {
+  background: rgba(10, 82, 150, 0.05);
+  border: none;
+  font-family: var(--sky-font-sans);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--sky-accent);
+  padding: 2px 7px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sky-date-chip:hover {
+  background: var(--sky-accent);
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   PASSENGERS CONTROL
+   ========================================================================== */
+.sky-passenger-control {
+  position: relative;
+}
+
+.sky-passenger-field {
+  padding: 14px 18px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.sky-passenger-field:hover {
+  background: rgba(10, 82, 150, 0.03);
+}
+
+.sky-passenger-display {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.sky-passenger-text-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.sky-passenger-value {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--sky-navy);
+}
+
+.sky-passenger-sub {
+  font-size: 11px;
+  color: var(--sky-text-secondary);
+  margin-top: 2px;
+}
+
+.sky-passenger-caret {
+  font-size: 12px;
+  opacity: 0.5;
+}
+
+/* PASSENGER POPOVER */
+.sky-passenger-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 260px;
+  background: #ffffff;
+  border: 1px solid rgba(10, 82, 150, 0.12);
+  border-radius: 18px;
+  box-shadow: 0 16px 40px rgba(11, 38, 70, 0.18);
+  padding: 16px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  animation: sky-dropdown-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sky-popover-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sky-popover-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.sky-popover-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--sky-navy);
+}
+
+.sky-popover-desc {
+  font-size: 11px;
+  color: var(--sky-text-muted);
+}
+
+.sky-counter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sky-counter-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid rgba(10, 82, 150, 0.18);
+  background: #ffffff;
+  color: var(--sky-accent);
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sky-counter-btn:hover:not(:disabled) {
+  background: var(--sky-accent);
+  color: #ffffff;
+}
+
+.sky-counter-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.sky-counter-val {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--sky-navy);
+  min-width: 14px;
+  text-align: center;
+}
+
+.sky-popover-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 6px;
+  border-top: 1px solid rgba(10, 82, 150, 0.08);
+}
+
+.sky-popover-done-btn {
+  background: var(--sky-accent);
+  border: none;
+  color: #ffffff;
+  font-family: var(--sky-font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.sky-popover-done-btn:hover {
+  background: var(--sky-accent-hover);
+}
+
+/* ==========================================================================
+   SEARCH ACTION BUTTON
+   ========================================================================== */
+.sky-search-action-col {
+  display: flex;
+  align-items: center;
+  padding: 6px;
+}
+
+.sky-search-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 100%;
+  min-height: 54px;
+  padding: 0 32px;
+  border-radius: 16px;
+  border: none;
+  background: linear-gradient(135deg, #0d5ea6 0%, #073b6b 100%);
+  color: #ffffff;
+  font-family: var(--sky-font-sans);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(10, 82, 150, 0.28);
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  white-space: nowrap;
+}
+
+.sky-search-btn:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 12px 32px rgba(10, 82, 150, 0.38);
+}
+
+.sky-search-btn:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
+}
+
+.sky-search-btn:disabled {
+  opacity: 0.85;
+  cursor: wait;
+}
+
+.sky-btn-arrow {
+  font-size: 16px;
+  transition: transform 0.2s ease;
+}
+
+.sky-search-btn:hover .sky-btn-arrow {
+  transform: translateX(4px);
+}
+
+/* LOADING ANIMATION IN BUTTON */
+.sky-search-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sky-loading-track {
+  position: relative;
+  width: 50px;
+  height: 14px;
+  overflow: hidden;
+}
+
+.sky-loading-line {
+  position: absolute;
+  top: 6px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+}
+
+.sky-loading-plane {
+  position: absolute;
+  top: -2px;
+  left: -10px;
+  font-size: 12px;
+  animation: sky-plane-glide 1.4s ease-in-out infinite;
+}
+
+@keyframes sky-plane-glide {
+  0% { transform: translateX(0); opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translateX(65px); opacity: 0; }
+}
+
+/* CONSOLE FOOTER */
+.sky-console-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 10px;
+}
+
+.sky-clear-link {
+  background: transparent;
+  border: none;
+  font-family: var(--sky-font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--sky-text-muted);
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.15s ease;
+}
+
+.sky-clear-link:hover {
+  color: var(--sky-accent);
+}
+
+/* ==========================================================================
+   RECENT SEARCHES SECTION (BACKED BY STACK DSA)
+   ========================================================================== */
+.sky-recent-section {
+  width: 100%;
+  max-width: 1180px;
+  margin-top: 24px;
+  position: relative;
+  z-index: 5;
+}
+
+.sky-recent-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding: 0 4px;
+}
+
+.sky-recent-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sky-recent-icon {
+  font-size: 14px;
+  color: var(--sky-navy);
+}
+
+.sky-recent-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--sky-navy);
+}
+
+.sky-recent-count {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--sky-accent);
+  background: rgba(10, 82, 150, 0.08);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.sky-recent-clear-btn {
+  background: transparent;
+  border: none;
+  font-family: var(--sky-font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--sky-text-muted);
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.sky-recent-clear-btn:hover {
+  color: var(--sky-error);
+}
+
+.sky-recent-list {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+}
+
+.sky-recent-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  padding: 10px 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(11, 38, 70, 0.05);
+  transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+  text-align: left;
+  flex-shrink: 0;
+}
+
+.sky-recent-item:hover {
+  background: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(10, 82, 150, 0.12);
+  border-color: rgba(10, 82, 150, 0.2);
+}
+
+.sky-recent-route {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--sky-font-sans);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--sky-navy);
+}
+
+.sky-recent-arrow {
+  color: var(--sky-accent);
+  font-size: 13px;
+}
+
+.sky-recent-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.sky-recent-cities {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--sky-text-secondary);
+}
+
+.sky-recent-date {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--sky-accent);
+}
+
+/* ==========================================================================
+   RESPONSIVE LAYOUT FOR TABLET & MOBILE
+   ========================================================================== */
+@media (max-width: 1080px) {
+  .sky-floating-stats {
+    position: static;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .sky-floating-rating {
+    position: static;
+    margin-bottom: 20px;
+  }
+  .sky-aircraft-stage {
+    height: 220px;
+  }
+  .sky-console-fields {
+    grid-template-columns: 1fr auto 1fr;
+    grid-template-rows: auto auto;
+    gap: 8px;
+    padding: 8px;
+  }
+  .sky-field-divider {
+    display: none;
+  }
+  .sky-date-field,
+  .sky-passenger-control,
+  .sky-search-action-col {
+    grid-column: span 3;
+  }
+  .sky-search-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .sky-world {
+    padding: 0 16px 60px;
+  }
+  .sky-nav-links {
+    display: none;
+  }
+  .sky-console-topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .sky-console-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .sky-swap-col {
+    margin: -6px 0;
+  }
+  .sky-floating-stats {
+    flex-direction: column;
+    align-items: center;
+  }
+  .sky-hero-heading {
+    font-size: 28px;
+  }
+  .sky-dropdown {
+    width: 100%;
+    left: 0;
+    right: 0;
+  }
+  .sky-passenger-popover {
+    width: 100%;
+    right: 0;
+    left: 0;
+  }
+}

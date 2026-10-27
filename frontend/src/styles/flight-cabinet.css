@@ -1,0 +1,892 @@
+/* ==========================================================================
+   SkyLark — Screen 3: Flight Cabinet
+   A premium, physical-looking 3D aviation cabinet in a dark environment.
+   Typography: DM Serif Display (title) + DM Sans (all UI text)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   CSS CUSTOM PROPERTIES — Screen 3 Dark Cabinet Theme
+   -------------------------------------------------------------------------- */
+:root {
+  --fc-bg:              #0c0c0b;
+  --fc-bg-mid:          #111110;
+  --fc-cabinet:         #1a1917;
+  --fc-cabinet-face:    #1f1e1c;
+  --fc-cabinet-edge:    #2a2926;
+  --fc-cabinet-bevel:   #2f2e2b;
+  --fc-cabinet-deep:    #161514;
+  --fc-recess:          #131211;
+  --fc-recess-border:   rgba(255, 255, 255, 0.055);
+  --fc-text-primary:    #f0ebe2;
+  --fc-text-secondary:  #a09a91;
+  --fc-text-tertiary:   #6a6460;
+  --fc-gold:            #c8a96e;
+  --fc-gold-dim:        #a8894e;
+  --fc-gold-subtle:     rgba(200, 169, 110, 0.15);
+  --fc-blue-accent:     rgba(160, 190, 220, 0.12);
+  --fc-border-hard:     rgba(255, 255, 255, 0.07);
+  --fc-border-soft:     rgba(255, 255, 255, 0.035);
+  --fc-shadow-deep:     rgba(0, 0, 0, 0.9);
+  --fc-shadow-medium:   rgba(0, 0, 0, 0.55);
+  --fc-shadow-light:    rgba(0, 0, 0, 0.3);
+  --fc-highlight:       rgba(255, 255, 255, 0.04);
+  --fc-highlight-edge:  rgba(255, 255, 255, 0.08);
+  --fc-font-display:    'DM Serif Display', Georgia, serif;
+  --fc-font-sans:       'DM Sans', -apple-system, sans-serif;
+}
+
+/* ==========================================================================
+   TRANSITION ZONE: Screen 2 Sky -> Screen 3 Dark Environment
+   ========================================================================== */
+.fc-transition-zone {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  background: linear-gradient(
+    to bottom,
+    #b8cdd8 0%,
+    #8aabbd 12%,
+    #4a6e80 28%,
+    #1e3340 46%,
+    #0f1a20 68%,
+    #0c0c0b 100%
+  );
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   MAIN SCREEN 3 WORLD
+   ========================================================================== */
+.fc-world {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--fc-bg);
+  color: var(--fc-text-primary);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 40px 100px;
+  box-sizing: border-box;
+}
+
+.fc-world::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 700px;
+  height: 500px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(200, 169, 110, 0.03) 0%,
+    rgba(160, 190, 220, 0.02) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ==========================================================================
+   TITLE SECTION
+   ========================================================================== */
+.fc-title-section {
+  text-align: center;
+  margin-bottom: 40px;
+  position: relative;
+  z-index: 1;
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.15s,
+    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.15s;
+}
+
+.fc-title-section.fc-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fc-title-kicker {
+  font-family: var(--fc-font-sans);
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--fc-text-tertiary);
+  display: block;
+  margin-bottom: 12px;
+}
+
+.fc-main-title {
+  font-family: var(--fc-font-display);
+  font-size: clamp(36px, 5.5vw, 60px);
+  font-weight: 400;
+  color: var(--fc-text-primary);
+  margin: 0;
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+
+/* ==========================================================================
+   CABINET OUTER SHELL
+   ========================================================================== */
+.fc-cabinet-shell {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 640px;
+  border-radius: 6px;
+  background: linear-gradient(
+    165deg,
+    var(--fc-cabinet-bevel) 0%,
+    var(--fc-cabinet-face) 3%,
+    var(--fc-cabinet) 15%,
+    var(--fc-cabinet-deep) 85%,
+    var(--fc-cabinet-edge) 100%
+  );
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.07),
+    inset -1px -1px 0 rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.055),
+    2px 3px 0 0 rgba(0, 0, 0, 0.7),
+    0 8px 24px rgba(0, 0, 0, 0.5),
+    0 24px 64px rgba(0, 0, 0, 0.55),
+    0 48px 120px rgba(0, 0, 0, 0.4),
+    0 0 60px rgba(200, 169, 110, 0.04);
+  will-change: transform, opacity;
+  opacity: 0;
+  transform: translateY(32px) scale(0.99);
+  transition:
+    opacity 1s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fc-cabinet-shell.fc-revealed {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Fastener — top-left */
+.fc-cabinet-shell::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--fc-cabinet-bevel) 0%, var(--fc-cabinet-deep) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  z-index: 10;
+}
+
+/* Fastener — top-right */
+.fc-cabinet-shell::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--fc-cabinet-bevel) 0%, var(--fc-cabinet-deep) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  z-index: 10;
+}
+
+.fc-cabinet-corners {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  border-radius: inherit;
+}
+
+.fc-cabinet-corners::before {
+  content: '';
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--fc-cabinet-bevel) 0%, var(--fc-cabinet-deep) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.fc-cabinet-corners::after {
+  content: '';
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--fc-cabinet-bevel) 0%, var(--fc-cabinet-deep) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+/* ==========================================================================
+   CABINET HEADER PLATE
+   ========================================================================== */
+.fc-cabinet-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--fc-border-hard);
+  background: linear-gradient(to bottom, rgba(255,255,255,0.03) 0%, transparent 100%);
+}
+
+.fc-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.fc-brand-micro {
+  font-family: var(--fc-font-sans);
+  font-size: 8.5px;
+  font-weight: 500;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--fc-text-tertiary);
+}
+
+.fc-cabinet-title {
+  font-family: var(--fc-font-display);
+  font-size: clamp(26px, 4vw, 34px);
+  font-weight: 400;
+  line-height: 1.05;
+  color: var(--fc-text-primary);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.fc-header-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 1px solid var(--fc-border-hard);
+  border-radius: 2px;
+  background: var(--fc-recess);
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
+  margin-top: 4px;
+}
+
+.fc-badge-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: var(--fc-gold);
+  box-shadow: 0 0 6px rgba(200, 169, 110, 0.5);
+  animation: fc-pulse 2.8s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes fc-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px rgba(200, 169, 110, 0.5); }
+  50% { opacity: 0.5; box-shadow: 0 0 3px rgba(200, 169, 110, 0.2); }
+}
+
+.fc-badge-text {
+  font-family: var(--fc-font-sans);
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--fc-text-tertiary);
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   CABINET BODY
+   ========================================================================== */
+.fc-cabinet-body {
+  padding: 20px 20px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ==========================================================================
+   FROM / TO ROW
+   ========================================================================== */
+.fc-route-row {
+  display: grid;
+  grid-template-columns: 1fr 44px 1fr;
+  gap: 0;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--fc-recess-border);
+  background: var(--fc-recess);
+  box-shadow:
+    inset 0 2px 8px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(0, 0, 0, 0.4);
+}
+
+.fc-airport-field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 16px 18px;
+  cursor: pointer;
+  transition: background-color 0.18s ease;
+  min-width: 0;
+  overflow: visible;
+}
+
+.fc-airport-field:hover {
+  background-color: rgba(255, 255, 255, 0.025);
+}
+
+.fc-airport-field.fc-active {
+  background-color: rgba(200, 169, 110, 0.06);
+}
+
+.fc-field-label {
+  font-family: var(--fc-font-sans);
+  font-size: 8.5px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--fc-text-tertiary);
+  margin-bottom: 6px;
+}
+
+.fc-field-city-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.fc-field-city-input {
+  font-family: var(--fc-font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--fc-text-primary);
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 0;
+  width: 100%;
+  min-width: 0;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  caret-color: var(--fc-gold);
+  margin-bottom: 2px;
+}
+
+.fc-field-city-input::placeholder {
+  color: var(--fc-text-tertiary);
+}
+
+.fc-field-iata {
+  font-family: var(--fc-font-sans);
+  font-size: 28px;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  color: var(--fc-text-primary);
+  line-height: 1;
+  flex-shrink: 0;
+  transition: color 0.18s;
+}
+
+.fc-airport-field:hover .fc-field-iata {
+  color: var(--fc-gold);
+}
+
+.fc-swap-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-left: 1px solid var(--fc-border-hard);
+  border-right: 1px solid var(--fc-border-hard);
+}
+
+.fc-swap-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--fc-cabinet-edge);
+  border: 1px solid var(--fc-border-hard);
+  color: var(--fc-text-secondary);
+  font-size: 13px;
+  cursor: pointer;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.06),
+    0 2px 4px rgba(0,0,0,0.5);
+  transition: background 0.18s, color 0.18s, transform 0.24s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.fc-swap-btn:hover {
+  background: var(--fc-cabinet-bevel);
+  color: var(--fc-gold);
+  transform: rotate(180deg);
+}
+
+/* ==========================================================================
+   DATE ROW
+   ========================================================================== */
+.fc-date-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  border-radius: 4px;
+  border: 1px solid var(--fc-recess-border);
+  background: var(--fc-recess);
+  box-shadow:
+    inset 0 2px 8px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(0, 0, 0, 0.4);
+  padding: 14px 18px;
+  cursor: pointer;
+  transition: background-color 0.18s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.fc-date-row:hover {
+  background-color: rgba(255, 255, 255, 0.025);
+}
+
+.fc-date-left {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fc-date-value {
+  font-family: var(--fc-font-sans);
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--fc-text-primary);
+  line-height: 1;
+}
+
+.fc-date-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.fc-date-standby {
+  font-family: var(--fc-font-sans);
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--fc-text-tertiary);
+}
+
+.fc-date-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 3px;
+  background: var(--fc-cabinet-edge);
+  border: 1px solid var(--fc-border-hard);
+  color: var(--fc-text-secondary);
+  font-size: 12px;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.06),
+    0 1px 3px rgba(0,0,0,0.4);
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+  flex-shrink: 0;
+}
+
+.fc-date-row:hover .fc-date-icon {
+  color: var(--fc-gold);
+}
+
+/* Hidden native date input overlays entire date row */
+.fc-date-input-hidden {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+}
+
+/* ==========================================================================
+   SEARCH BUTTON
+   ========================================================================== */
+.fc-search-btn {
+  width: 100%;
+  padding: 0;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: linear-gradient(to bottom, var(--fc-gold) 0%, #b8924a 100%);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: var(--fc-font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #1a1510;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.12) inset,
+    0 -1px 0 rgba(0,0,0,0.25) inset,
+    0 4px 16px rgba(200, 169, 110, 0.25),
+    0 2px 4px rgba(0,0,0,0.5);
+  transition: background 0.22s ease, box-shadow 0.22s ease, transform 0.12s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.fc-search-btn::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 50%;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.08) 0%, transparent 100%);
+  border-radius: 4px 4px 0 0;
+  pointer-events: none;
+}
+
+.fc-search-btn:hover:not(:disabled) {
+  background: linear-gradient(to bottom, #d4b67a 0%, #c8a056 100%);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.14) inset,
+    0 -1px 0 rgba(0,0,0,0.25) inset,
+    0 6px 24px rgba(200, 169, 110, 0.35),
+    0 2px 6px rgba(0,0,0,0.4);
+}
+
+.fc-search-btn:active:not(:disabled) {
+  transform: scale(0.987);
+}
+
+.fc-search-btn:disabled {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.fc-search-btn--loading {
+  background: linear-gradient(to bottom, #a8894e 0%, #8a6e38 100%);
+}
+
+.fc-search-btn--done {
+  background: linear-gradient(to bottom, #4a7a5a 0%, #3a6048 100%);
+  color: #d0ead6;
+  letter-spacing: 0.16em;
+}
+
+.fc-btn-arrow {
+  font-size: 15px;
+  transition: transform 0.2s ease;
+  display: inline-block;
+}
+
+.fc-search-btn:hover .fc-btn-arrow {
+  transform: translateX(4px);
+}
+
+/* Validation error */
+.fc-error-row {
+  padding: 0 4px;
+}
+
+.fc-error-msg {
+  font-family: var(--fc-font-sans);
+  font-size: 8.5px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(220, 80, 80, 0.8);
+}
+
+.fc-route-row--error {
+  border-color: rgba(220, 80, 80, 0.3) !important;
+}
+
+.fc-date-row--error {
+  border-color: rgba(220, 80, 80, 0.3) !important;
+}
+
+/* ==========================================================================
+   RECENT SEARCHES
+   ========================================================================== */
+.fc-cabinet-footer {
+  padding: 14px 20px 18px;
+  border-top: 1px solid var(--fc-border-hard);
+  background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.15) 100%);
+}
+
+.fc-recent-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.fc-recent-label {
+  font-family: var(--fc-font-sans);
+  font-size: 8.5px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--fc-text-tertiary);
+}
+
+.fc-recent-archive {
+  font-family: var(--fc-font-sans);
+  font-size: 8px;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fc-gold-dim);
+  opacity: 0.7;
+}
+
+.fc-recent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.fc-recent-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.15s;
+  border: 1px solid transparent;
+}
+
+.fc-recent-item:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+  border-color: var(--fc-border-soft);
+}
+
+.fc-recent-route {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--fc-font-sans);
+  font-size: 11.5px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--fc-text-secondary);
+}
+
+.fc-recent-arrow {
+  color: var(--fc-text-tertiary);
+  font-size: 10px;
+}
+
+.fc-recent-date {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--fc-font-sans);
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fc-text-tertiary);
+}
+
+.fc-recent-pip {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--fc-gold-dim);
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   AIRPORT AUTOCOMPLETE DROPDOWN
+   ========================================================================== */
+.fc-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: -1px;
+  right: -1px;
+  background: var(--fc-cabinet-face);
+  border: 1px solid var(--fc-border-hard);
+  border-radius: 4px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.7), 0 2px 8px rgba(0,0,0,0.5);
+  z-index: 200;
+  overflow: hidden;
+  animation: fc-dropdown-in 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fc-dropdown-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fc-dropdown-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 12px;
+  border-bottom: 1px solid var(--fc-border-hard);
+  background: rgba(255,255,255,0.02);
+}
+
+.fc-dropdown-title {
+  font-family: var(--fc-font-sans);
+  font-size: 7.5px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--fc-text-tertiary);
+}
+
+.fc-dropdown-iata-col {
+  font-family: var(--fc-font-sans);
+  font-size: 7.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fc-gold);
+  opacity: 0.7;
+}
+
+.fc-dropdown-list {
+  list-style: none;
+  margin: 0;
+  padding: 4px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.fc-dropdown-list::-webkit-scrollbar { width: 3px; }
+.fc-dropdown-list::-webkit-scrollbar-track { background: transparent; }
+.fc-dropdown-list::-webkit-scrollbar-thumb { background: var(--fc-border-hard); border-radius: 2px; }
+
+.fc-dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.12s;
+}
+
+.fc-dropdown-item:hover {
+  background: rgba(255,255,255,0.04);
+}
+
+.fc-dropdown-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.fc-dropdown-city {
+  font-family: var(--fc-font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--fc-text-primary);
+}
+
+.fc-dropdown-airport-name {
+  font-family: var(--fc-font-sans);
+  font-size: 9px;
+  color: var(--fc-text-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fc-dropdown-code {
+  font-family: var(--fc-font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--fc-gold);
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   REDUCED MOTION
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .fc-cabinet-shell,
+  .fc-title-section {
+    transition: opacity 0.3s ease;
+    transform: none !important;
+  }
+  .fc-badge-dot { animation: none; }
+  .fc-swap-btn:hover { transform: none; }
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (min-width: 1280px) {
+  .fc-world { padding: 100px 60px 120px; }
+  .fc-cabinet-shell { max-width: 680px; }
+}
+
+@media (max-width: 900px) {
+  .fc-world { padding: 60px 28px 80px; }
+  .fc-title-section { margin-bottom: 32px; }
+  .fc-main-title { font-size: clamp(30px, 6vw, 48px); }
+  .fc-field-iata { font-size: 22px; }
+  .fc-date-value { font-size: 18px; }
+}
+
+@media (max-width: 600px) {
+  .fc-world { padding: 48px 16px 64px; justify-content: flex-start; min-height: auto; }
+  .fc-transition-zone { height: 120px; }
+  .fc-title-section { margin-bottom: 24px; }
+  .fc-main-title { font-size: clamp(28px, 9vw, 38px); }
+  .fc-cabinet-shell { max-width: 100%; border-radius: 4px; }
+  .fc-route-row { grid-template-columns: 1fr; }
+  .fc-swap-col {
+    border-left: none;
+    border-right: none;
+    border-top: 1px solid var(--fc-border-hard);
+    border-bottom: 1px solid var(--fc-border-hard);
+    padding: 10px 0;
+  }
+  .fc-airport-field { padding: 14px 16px; }
+  .fc-cabinet-header { padding: 16px 18px 14px; }
+  .fc-cabinet-body { padding: 14px 14px 14px; gap: 10px; }
+  .fc-cabinet-footer { padding: 12px 14px 16px; }
+  .fc-field-iata { font-size: 20px; }
+  .fc-date-value { font-size: 17px; }
+  .fc-search-btn { height: 48px; font-size: 10.5px; }
+  .fc-date-row { padding: 12px 16px; }
+}
+
+@media (max-width: 380px) {
+  .fc-world { padding: 40px 12px 56px; }
+  .fc-title-kicker { font-size: 8px; }
+  .fc-main-title { font-size: 26px; }
+}

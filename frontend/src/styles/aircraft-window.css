@@ -1,0 +1,908 @@
+/* ==========================================================================
+   SkyLark — Page 2 Cinematic Aircraft Window Opening & Reveal Experience
+   ========================================================================== */
+
+/* Pinned Scroll Container (~340vh for a spacious, cinematic scroll) */
+.aircraft-sequence-container {
+  position: relative;
+  width: 100vw;
+  height: 340vh;
+  background-color: var(--color-bg);
+  box-sizing: border-box;
+}
+
+/* Pinned Viewport Frame */
+.aircraft-sticky-frame {
+  position: sticky;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-bg);
+}
+
+/* Fullscreen Sky Reveal Backdrop (Reveals at 100% open state) */
+.full-sky-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+  background: url('../assets/sky-clouds.jpg') center center / cover no-repeat;
+  will-change: opacity, transform;
+}
+
+/* Cabin Interior Atmosphere (Dark warm charcoal cabin wall) */
+.cabin-atmosphere {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse 70% 65% at 50% 50%,
+      rgba(24, 22, 19, 0.85) 0%,
+      rgba(17, 16, 14, 0.95) 50%,
+      var(--color-bg-deep) 100%
+    );
+  will-change: opacity;
+}
+
+.cabin-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: radial-gradient(circle at center, transparent 35%, rgba(11, 11, 10, 0.8) 100%);
+  will-change: opacity;
+}
+
+/* Ambient cabin wall grain */
+.cabin-grain {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.028;
+  mix-blend-mode: screen;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* ==========================================================================
+   AIRCRAFT WINDOW ASSEMBLY
+   ========================================================================== */
+
+.aircraft-window-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  width: 380px;
+  height: 540px;
+  will-change: transform, opacity;
+  transform-origin: center center;
+}
+
+/* Outer Window Frame (Beveled composite fuselage wall surround) */
+.window-outer-bezel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 170px;
+  background: linear-gradient(
+    145deg,
+    #24221f 0%,
+    #181715 35%,
+    #11100e 70%,
+    #0c0b0a 100%
+  );
+  box-shadow:
+    0 40px 100px rgba(0, 0, 0, 0.85),
+    0 0 0 1px rgba(242, 239, 233, 0.06),
+    inset 0 3px 6px rgba(255, 255, 255, 0.12),
+    inset 0 -6px 16px rgba(0, 0, 0, 0.85);
+  padding: 24px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  will-change: transform, opacity;
+}
+
+/* Sunshade Slot Recess at the top */
+.sunshade-recess {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 130px;
+  height: 8px;
+  border-radius: 4px;
+  background: #080706;
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.9),
+    0 1px 1px rgba(255, 255, 255, 0.05);
+}
+
+.sunshade-handle {
+  position: absolute;
+  top: 1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 44px;
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #2b2824 0%, #171614 100%);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+/* Middle Recessed Rim (Interior reveal bevel) */
+.window-middle-rim {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 146px;
+  background: linear-gradient(
+    180deg,
+    #1c1a17 0%,
+    #131210 40%,
+    #0d0c0a 100%
+  );
+  box-shadow:
+    inset 0 4px 12px rgba(0, 0, 0, 0.9),
+    0 0 0 1px rgba(255, 255, 255, 0.04),
+    inset 0 -2px 6px rgba(255, 255, 255, 0.03);
+  padding: 14px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Inner Window Frame (Aperture housing holding shutters and glass) */
+.window-inner-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 132px;
+  overflow: hidden;
+  background-color: #0b0a09;
+  box-shadow:
+    inset 0 0 24px rgba(0, 0, 0, 0.95),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+/* ==========================================================================
+   WINDOW APERTURE & OPENING SHUTTER MECHANISM
+   ========================================================================== */
+
+/* Sky Container inside the aperture */
+.window-glass {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.window-sky-image {
+  position: absolute;
+  top: -15%;
+  left: -20%;
+  width: 140%;
+  height: 130%;
+  object-fit: cover;
+  object-position: center 38%;
+  will-change: transform;
+}
+
+/* Glass Reflection & Sheen */
+.window-glass-reflection {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    128deg,
+    rgba(255, 255, 255, 0.22) 0%,
+    rgba(255, 255, 255, 0.05) 28%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.04) 75%,
+    rgba(255, 255, 255, 0.12) 100%
+  );
+  mix-blend-mode: overlay;
+}
+
+/* Micro-etched brand watermark on window glass */
+.window-glass-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  color: #ffffff;
+  opacity: 0.3;
+  pointer-events: none;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  z-index: 2;
+  will-change: opacity;
+}
+
+/* Central Volumetric Light Slit (Glows when window starts opening) */
+.shutter-light-leak {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90px;
+  z-index: 3;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(178, 222, 245, 0.6) 0%,
+    rgba(255, 255, 255, 0.3) 25%,
+    transparent 70%
+  );
+  mix-blend-mode: screen;
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+/* Left & Right Sliding Shutter Panels (The Opening Mechanism) */
+.window-shutter {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50.5%;
+  z-index: 4;
+  background: linear-gradient(
+    180deg,
+    #22201d 0%,
+    #171614 25%,
+    #0f0e0c 50%,
+    #141311 75%,
+    #1d1b18 100%
+  );
+  will-change: transform;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+/* Precision composite micro-ribbing on shutter surfaces */
+.window-shutter::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.02) 0px,
+    rgba(255, 255, 255, 0.02) 2px,
+    transparent 2px,
+    transparent 7px
+  );
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.window-shutter-left {
+  left: 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    inset -3px 0 10px rgba(0, 0, 0, 0.85),
+    inset 0 0 30px rgba(0, 0, 0, 0.95);
+  justify-content: flex-end;
+}
+
+.window-shutter-right {
+  right: 0;
+  border-left: 1px solid rgba(0, 0, 0, 0.9);
+  box-shadow:
+    inset 3px 0 10px rgba(255, 255, 255, 0.05),
+    inset 0 0 30px rgba(0, 0, 0, 0.95);
+  justify-content: flex-start;
+}
+
+/* Central Seam Grip Accent when closed */
+.shutter-seam-tab {
+  width: 3px;
+  height: 48px;
+  border-radius: 1.5px;
+  background: linear-gradient(180deg, #322f2a 0%, #1a1815 100%);
+  opacity: 0.6;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
+}
+
+.window-shutter-left .shutter-seam-tab {
+  margin-right: 2px;
+}
+
+.window-shutter-right .shutter-seam-tab {
+  margin-left: 2px;
+}
+
+/* Closed state ambient darkness tint inside the window */
+.window-closed-obscurity {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: radial-gradient(
+    circle at center,
+    rgba(14, 13, 11, 0.6) 0%,
+    rgba(8, 7, 6, 0.95) 100%
+  );
+  pointer-events: none;
+  will-change: opacity;
+}
+
+/* ==========================================================================
+   OVERLAY EDITORIAL UI & TELEMETRY
+   ========================================================================== */
+
+/* Top HUD Bar */
+.cabin-top-bar {
+  position: absolute;
+  top: 40px;
+  left: 48px;
+  right: 48px;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  will-change: opacity, transform;
+}
+
+.top-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.top-bar-brand {
+  font-weight: 600;
+  color: var(--color-text-primary);
+  letter-spacing: 0.22em;
+}
+
+.top-bar-divider {
+  width: 1px;
+  height: 10px;
+  background-color: rgba(169, 163, 154, 0.35);
+}
+
+.top-bar-tag {
+  opacity: 0.75;
+}
+
+.top-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.cruise-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cruise-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: #38ef7d;
+  box-shadow: 0 0 8px rgba(56, 239, 125, 0.6);
+}
+
+/* Approach Stage Selector on Right */
+.approach-stage-list {
+  position: absolute;
+  top: 100px;
+  right: 48px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: auto;
+  will-change: opacity, transform;
+}
+
+.stage-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-family: var(--font-sans);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  background: rgba(24, 22, 19, 0.6);
+  border: 1px solid rgba(242, 239, 233, 0.08);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.stage-pill:hover {
+  border-color: rgba(242, 239, 233, 0.2);
+  color: #f2efe9;
+}
+
+.stage-pill.active {
+  color: #f2efe9;
+  border-color: rgba(242, 239, 233, 0.25);
+  background: rgba(39, 48, 57, 0.4);
+}
+
+.stage-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: var(--color-text-muted);
+}
+
+.stage-pill.active .stage-dot {
+  background-color: #d4af37;
+  box-shadow: 0 0 6px rgba(212, 175, 55, 0.8);
+}
+
+/* Stage 1: Left Editorial Content (Closed Window State) */
+.editorial-left-content {
+  position: absolute;
+  top: 50%;
+  left: 64px;
+  transform: translateY(-50%);
+  z-index: 8;
+  max-width: 460px;
+  pointer-events: none;
+  will-change: opacity, transform;
+}
+
+.editorial-micro-kicker {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.editorial-micro-kicker::before {
+  content: '';
+  width: 18px;
+  height: 1px;
+  background-color: var(--color-text-muted);
+  opacity: 0.5;
+}
+
+.editorial-main-headline {
+  font-size: 72px;
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  margin: 0 0 24px 0;
+}
+
+.editorial-main-headline span {
+  display: block;
+}
+
+.editorial-body-subtext {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+  max-width: 360px;
+  margin: 0;
+}
+
+/* Right Telemetry Column */
+.telemetry-column {
+  position: absolute;
+  top: 50%;
+  right: 64px;
+  transform: translateY(-50%);
+  z-index: 8;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  text-align: right;
+  pointer-events: none;
+  will-change: opacity, transform;
+}
+
+.telemetry-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.telemetry-label {
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--color-steel);
+  opacity: 0.7;
+}
+
+.telemetry-value {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+}
+
+/* Bottom HUD Bar */
+.cabin-bottom-bar {
+  position: absolute;
+  bottom: 36px;
+  left: 48px;
+  right: 48px;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
+  font-size: 8.5px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  opacity: 0.7;
+  will-change: opacity, transform;
+}
+
+.bottom-scroll-callout-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 8.5px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  pointer-events: auto;
+  padding: 4px 8px;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.bottom-scroll-callout-btn:hover {
+  color: #f2efe9;
+  transform: translateY(-2px);
+}
+
+.bottom-mouse-indicator {
+  width: 14px;
+  height: 22px;
+  border-radius: 7px;
+  border: 1px solid rgba(242, 239, 233, 0.3);
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.bottom-mouse-wheel {
+  width: 2px;
+  height: 4px;
+  border-radius: 1px;
+  background-color: #d4af37;
+  margin-top: 4px;
+  animation: mouseWheelScrub 1.8s ease-in-out infinite;
+}
+
+@keyframes mouseWheelScrub {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  60% {
+    transform: translateY(6px);
+    opacity: 0.2;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Stage 2 Text: "LOOK CLOSER." (Appears while window is opening) */
+.approach-closer-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+.approach-closer-heading {
+  font-size: 52px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  margin: 0;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.9);
+}
+
+.approach-closer-micro {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-top: 12px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+/* Stage 3 Text: "SEE WHERE YOU COULD GO." (Appears over fully revealed sky) */
+.horizon-reveal-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  max-width: 800px;
+  padding: 0 24px;
+  will-change: opacity, transform;
+}
+
+.horizon-reveal-heading {
+  font-size: 64px;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin: 0 0 16px 0;
+  text-shadow: 0 6px 30px rgba(0, 0, 0, 0.55);
+}
+
+.horizon-reveal-heading span {
+  display: block;
+}
+
+.horizon-reveal-subtext {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN (Desktop, Laptop, Tablet, Mobile)
+   ========================================================================== */
+
+/* Laptop (1280px) */
+@media (max-width: 1280px) {
+  .editorial-main-headline {
+    font-size: 58px;
+  }
+
+  .aircraft-window-wrapper {
+    width: 340px;
+    height: 480px;
+  }
+
+  .editorial-left-content {
+    left: 48px;
+    max-width: 380px;
+  }
+
+  .telemetry-column {
+    right: 48px;
+  }
+}
+
+/* Tablet (1024px and 768px) */
+@media (max-width: 1024px) {
+  .aircraft-window-wrapper {
+    width: 280px;
+    height: 410px;
+    top: 44%;
+  }
+
+  .editorial-left-content {
+    top: auto;
+    bottom: 80px;
+    left: 40px;
+    right: 40px;
+    max-width: none;
+    transform: none;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .editorial-micro-kicker {
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+
+  .editorial-main-headline {
+    font-size: 38px;
+    margin-bottom: 10px;
+  }
+
+  .editorial-body-subtext {
+    max-width: 440px;
+    font-size: 12px;
+  }
+
+  .telemetry-column {
+    display: none;
+  }
+
+  .approach-stage-list {
+    top: 70px;
+    right: 32px;
+  }
+
+  .approach-closer-heading {
+    font-size: 40px;
+  }
+
+  .horizon-reveal-heading {
+    font-size: 46px;
+  }
+}
+
+/* Mobile (480px and 390px) */
+@media (max-width: 480px) {
+  .aircraft-window-wrapper {
+    width: 210px;
+    height: 310px;
+    top: 39%;
+  }
+
+  .window-outer-bezel {
+    border-radius: 110px;
+    padding: 14px;
+  }
+
+  .window-middle-rim {
+    border-radius: 96px;
+    padding: 8px;
+  }
+
+  .window-inner-frame {
+    border-radius: 88px;
+  }
+
+  .sunshade-recess {
+    width: 90px;
+    height: 6px;
+    top: 10px;
+  }
+
+  .sunshade-handle {
+    width: 32px;
+    height: 4px;
+  }
+
+  .cabin-top-bar {
+    top: 20px;
+    left: 18px;
+    right: 18px;
+    font-size: 8px;
+    letter-spacing: 0.16em;
+  }
+
+  .top-bar-right .cruise-badge {
+    display: none;
+  }
+
+  .approach-stage-list {
+    display: none;
+  }
+
+  .editorial-left-content {
+    top: auto;
+    bottom: 68px;
+    left: 20px;
+    right: 20px;
+    max-width: none;
+    transform: none;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .editorial-micro-kicker {
+    font-size: 8px;
+    letter-spacing: 0.22em;
+    margin-bottom: 8px;
+    justify-content: center;
+  }
+
+  .editorial-main-headline {
+    font-size: 26px;
+    line-height: 1.15;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+
+  .editorial-body-subtext {
+    font-size: 10.5px;
+    line-height: 1.4;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  .cabin-bottom-bar {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    justify-content: center;
+  }
+
+  .cabin-bottom-bar span:first-child,
+  .cabin-bottom-bar span:last-child {
+    display: none;
+  }
+
+  .bottom-scroll-callout-btn {
+    font-size: 7.5px;
+    letter-spacing: 0.18em;
+  }
+
+  .approach-closer-heading {
+    font-size: 28px;
+    letter-spacing: 0.06em;
+  }
+
+  .approach-closer-micro {
+    font-size: 8px;
+    letter-spacing: 0.25em;
+  }
+
+  .horizon-reveal-heading {
+    font-size: 32px;
+    line-height: 1.12;
+  }
+
+  .horizon-reveal-subtext {
+    font-size: 8px;
+    letter-spacing: 0.22em;
+  }
+}

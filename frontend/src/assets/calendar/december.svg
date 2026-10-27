@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" width="100%" height="100%">
+  <defs>
+    <linearGradient id="decNightSky" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#050814"/>
+      <stop offset="60%" stop-color="#0d1b2a"/>
+      <stop offset="100%" stop-color="#1b263b"/>
+    </linearGradient>
+    <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9"/>
+      <stop offset="60%" stop-color="#ffd166" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#0d1b2a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="900" height="600" fill="url(#decNightSky)"/>
+
+  <!-- Twinkling Star Field -->
+  <g fill="#ffffff" opacity="0.85">
+    <circle cx="80" cy="80" r="1.5"/>
+    <circle cx="150" cy="140" r="2"/>
+    <circle cx="230" cy="70" r="1.2"/>
+    <circle cx="320" cy="120" r="2.5"/>
+    <circle cx="410" cy="60" r="1.5"/>
+    <circle cx="500" cy="130" r="2"/>
+    <circle cx="590" cy="80" r="1.8"/>
+    <circle cx="680" cy="110" r="2.2"/>
+    <circle cx="760" cy="50" r="1.5"/>
+    <circle cx="840" cy="100" r="2"/>
+    <circle cx="120" cy="220" r="1.5"/>
+    <circle cx="280" cy="240" r="2"/>
+    <circle cx="710" cy="200" r="1.5"/>
+    <circle cx="820" cy="230" r="2"/>
+  </g>
+
+  <!-- Glowing Crescent Moon -->
+  <g transform="translate(720, 90)">
+    <circle cx="0" cy="0" r="35" fill="url(#moonGlow)"/>
+    <path d="M-10 -20 A 24 24 0 1 0 15 20 A 20 20 0 1 1 -10 -20 Z" fill="#fffbe6"/>
+  </g>
+
+  <!-- Sparkling Golden City Lights Grid Below -->
+  <g opacity="0.8">
+    <ellipse cx="450" cy="520" rx="460" ry="120" fill="#141c2c"/>
+    <path d="M0 480 Q 240 440 480 470 Q 720 440 900 480 L 900 600 L 0 600 Z" fill="#0b111e"/>
+    <!-- City glowing light clusters -->
+    <circle cx="220" cy="530" r="60" fill="#e76f51" opacity="0.25" filter="blur(8px)"/>
+    <circle cx="480" cy="510" r="80" fill="#f4a261" opacity="0.3" filter="blur(10px)"/>
+    <circle cx="720" cy="540" r="70" fill="#e9c46a" opacity="0.25" filter="blur(8px)"/>
+    <!-- Individual city light points -->
+    <g fill="#ffd166">
+      <circle cx="180" cy="520" r="1.5"/> <circle cx="200" cy="535" r="2"/> <circle cx="220" cy="515" r="1.8"/>
+      <circle cx="340" cy="500" r="2"/> <circle cx="360" cy="510" r="1.5"/> <circle cx="380" cy="495" r="2.2"/>
+      <circle cx="440" cy="490" r="2.5"/> <circle cx="460" cy="515" r="2"/> <circle cx="480" cy="485" r="1.8"/>
+      <circle cx="500" cy="505" r="2.2"/> <circle cx="530" cy="495" r="1.5"/> <circle cx="560" cy="520" r="2"/>
+      <circle cx="680" cy="530" r="2.2"/> <circle cx="710" cy="510" r="1.8"/> <circle cx="740" cy="545" r="2.5"/>
+    </g>
+  </g>
+
+  <!-- Airplane Wing with illuminated navigation strobe lights -->
+  <g transform="translate(420, 290)">
+    <path d="M-420 180 L 160 40 L 220 35 L 210 -15 L -420 100 Z" fill="#222f3e" filter="drop-shadow(0px 8px 16px rgba(0,0,0,0.6))"/>
+    <polygon points="160,40 220,35 215,-15 190,-10" fill="#00b4d8"/>
+    <!-- Wingtip navigation light glow -->
+    <circle cx="215" cy="-15" r="6" fill="#00f5d4"/>
+    <circle cx="215" cy="-15" r="14" fill="#00f5d4" opacity="0.4" filter="blur(4px)"/>
+  </g>
+
+  <rect width="900" height="600" fill="none" stroke="#293241" stroke-width="16" rx="20"/>
+</svg>

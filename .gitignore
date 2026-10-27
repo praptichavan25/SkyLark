@@ -1,0 +1,51 @@
+# ── DEPENDENCIES ───────────────────────────────────────────────────────────────
+node_modules/
+*/node_modules/
+
+# ── ENVIRONMENT (never commit secrets) ────────────────────────────────────────
+.env
+.env.*
+!.env.example
+*/.env
+*/.env.*
+!*/.env.example
+
+# ── BUILD OUTPUTS ──────────────────────────────────────────────────────────────
+dist/
+*/dist/
+build/
+*/build/
+
+# ── LOGS ───────────────────────────────────────────────────────────────────────
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ── IDE & EDITOR ───────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ── OS ─────────────────────────────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# ── TESTING & COVERAGE ─────────────────────────────────────────────────────────
+coverage/
+*/coverage/
+*.lcov
+
+# ── TYPESCRIPT ─────────────────────────────────────────────────────────────────
+*.tsbuildinfo

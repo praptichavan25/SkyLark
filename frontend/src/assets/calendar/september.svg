@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" width="100%" height="100%">
+  <defs>
+    <linearGradient id="sepSky" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#4a3f6b"/>
+      <stop offset="50%" stop-color="#8c6d87"/>
+      <stop offset="80%" stop-color="#dd9598"/>
+      <stop offset="100%" stop-color="#ffcaa8"/>
+    </linearGradient>
+    <linearGradient id="mtnBack" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#705370"/>
+      <stop offset="100%" stop-color="#483348"/>
+    </linearGradient>
+    <linearGradient id="mtnFront" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#4e354f"/>
+      <stop offset="100%" stop-color="#2d1c2e"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="900" height="600" fill="url(#sepSky)"/>
+
+  <!-- Mountain Ranges with Snow Caps -->
+  <polygon points="-50,600 120,380 260,600" fill="url(#mtnBack)"/>
+  <polygon points="120,380 80,440 120,430 145,450 160,420" fill="#fde0dd" opacity="0.9"/>
+
+  <polygon points="180,600 360,320 540,600" fill="url(#mtnBack)"/>
+  <polygon points="360,320 310,390 360,375 400,405 420,360" fill="#fde0dd" opacity="0.95"/>
+
+  <polygon points="460,600 640,350 820,600" fill="url(#mtnBack)"/>
+  <polygon points="640,350 590,410 640,395 680,425 700,380" fill="#fde0dd" opacity="0.9"/>
+
+  <polygon points="300,600 480,390 680,600" fill="url(#mtnFront)"/>
+  <polygon points="700,600 840,420 950,600" fill="url(#mtnFront)"/>
+
+  <!-- Morning Pink Mist Clouds -->
+  <path d="M0 480 Q 240 440 480 470 Q 720 430 900 460 L 900 600 L 0 600 Z" fill="#ffd8d8" opacity="0.4"/>
+
+  <!-- Airplane Wing Cutting through Sunrise Clouds -->
+  <g transform="translate(480, 260)">
+    <path d="M-480 220 L 0 0 L 70 -5 L 60 -45 L -480 120 Z" fill="#f5ebe0" filter="drop-shadow(0px 8px 16px rgba(40,15,30,0.3))"/>
+    <polygon points="0,0 70,-5 65,-45 40,-40" fill="#e76f51"/>
+  </g>
+
+  <rect width="900" height="600" fill="none" stroke="#f4efe6" stroke-width="16" rx="20"/>
+</svg>

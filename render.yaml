@@ -1,0 +1,21 @@
+# Render Blueprint for SKYLARK Full-Stack Deployment
+# Deploys frontend + backend together as a single unified Web Service
+services:
+  - type: web
+    name: skylark-flight-intelligence
+    runtime: node
+    plan: free
+    region: oregon
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: AVIATIONSTACK_API_KEY
+        sync: false
+      - key: AVIATIONSTACK_BASE_URL
+        value: https://api.aviationstack.com

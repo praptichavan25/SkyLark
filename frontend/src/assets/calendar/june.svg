@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" width="100%" height="100%">
+  <defs>
+    <linearGradient id="juneSky" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#4a3f6b"/>
+      <stop offset="40%" stop-color="#9d6b89"/>
+      <stop offset="70%" stop-color="#e28d84"/>
+      <stop offset="100%" stop-color="#fbc490"/>
+    </linearGradient>
+    <linearGradient id="cloudPink1" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffb8b8" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#d6809e" stop-opacity="0.95"/>
+    </linearGradient>
+    <linearGradient id="cloudPink2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffd5c2"/>
+      <stop offset="100%" stop-color="#e898aa"/>
+    </linearGradient>
+    <linearGradient id="wingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f5e6dc"/>
+      <stop offset="70%" stop-color="#cfb0a3"/>
+      <stop offset="100%" stop-color="#8b575c"/>
+    </linearGradient>
+    <radialGradient id="sunGlow" cx="65%" cy="60%" r="50%">
+      <stop offset="0%" stop-color="#fff4cc" stop-opacity="0.9"/>
+      <stop offset="50%" stop-color="#fca380" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#e28d84" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Sky Background -->
+  <rect width="900" height="600" fill="url(#juneSky)"/>
+  
+  <!-- Sun Glow behind clouds -->
+  <circle cx="580" cy="340" r="220" fill="url(#sunGlow)"/>
+
+  <!-- Fluffy Dreamy Cloud Layers -->
+  <path d="M-50 480 Q 80 380 220 420 Q 360 360 520 400 Q 680 340 820 390 Q 950 420 950 600 L -50 600 Z" fill="url(#cloudPink1)"/>
+  <path d="M-20 520 Q 150 440 320 480 Q 480 430 640 460 Q 800 420 920 490 L 920 600 L -20 600 Z" fill="url(#cloudPink2)"/>
+  
+  <!-- Soft cumulus billows -->
+  <circle cx="160" cy="460" r="90" fill="#fec5bb" opacity="0.6"/>
+  <circle cx="280" cy="430" r="110" fill="#ffe5d9" opacity="0.7"/>
+  <circle cx="460" cy="420" r="130" fill="#ffd7ba" opacity="0.8"/>
+  <circle cx="640" cy="410" r="120" fill="#fec89a" opacity="0.75"/>
+  <circle cx="780" cy="440" r="100" fill="#ffb5a7" opacity="0.7"/>
+
+  <!-- Aircraft Wingtip Silhouette -->
+  <path d="M260 360 L 620 420 L 680 415 L 670 380 L 400 340 Z" fill="url(#wingGrad)" filter="drop-shadow(0px 8px 16px rgba(40,15,30,0.3))"/>
+  <!-- Red Winglet Tip -->
+  <polygon points="620,420 680,415 675,370 655,375" fill="#d94e5d"/>
+  
+  <!-- Aircraft Window Frame Overlay -->
+  <rect width="900" height="600" fill="none" stroke="#e8d8cc" stroke-width="32" rx="40"/>
+  <rect x="24" y="24" width="852" height="552" fill="none" stroke="#b09888" stroke-width="4" rx="28" opacity="0.4"/>
+</svg>

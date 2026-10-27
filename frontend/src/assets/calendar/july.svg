@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" width="100%" height="100%">
+  <defs>
+    <linearGradient id="julySky" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1f78b4"/>
+      <stop offset="50%" stop-color="#6baed6"/>
+      <stop offset="100%" stop-color="#c6dbef"/>
+    </linearGradient>
+    <linearGradient id="planeBody" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f7f7f7"/>
+      <stop offset="50%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#d9d9d9"/>
+    </linearGradient>
+    <linearGradient id="julyClouds" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#dbe9f6" stop-opacity="0.9"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="900" height="600" fill="url(#julySky)"/>
+
+  <!-- Lower Clouds Sea -->
+  <path d="M-50 420 Q 120 340 300 370 Q 480 320 660 360 Q 820 330 950 380 L 950 600 L -50 600 Z" fill="url(#julyClouds)"/>
+  <circle cx="180" cy="420" r="120" fill="#ffffff" opacity="0.85"/>
+  <circle cx="380" cy="380" r="140" fill="#ffffff" opacity="0.9"/>
+  <circle cx="580" cy="390" r="130" fill="#ffffff" opacity="0.85"/>
+  <circle cx="780" cy="410" r="110" fill="#ffffff" opacity="0.9"/>
+
+  <!-- Passenger Airplane flying gracefully in mid-air -->
+  <g transform="translate(430, 220) rotate(-6) scale(1.1)">
+    <!-- Main Fuselage -->
+    <ellipse cx="0" cy="0" rx="160" ry="26" fill="url(#planeBody)" filter="drop-shadow(0px 12px 18px rgba(10,50,90,0.25))"/>
+    <!-- Cockpit Windows -->
+    <path d="M120 -6 Q 140 -2 145 6 Q 130 6 115 0 Z" fill="#2b5c8f"/>
+    <!-- Wings -->
+    <polygon points="-30,6 20,6 60,65 -10,65" fill="#e0e0e0"/>
+    <polygon points="-40,-6 10,-6 40,-75 -15,-70" fill="#cfcfcf"/>
+    <!-- Jet Engine -->
+    <rect x="-10" y="18" width="45" height="18" rx="8" fill="#555" stroke="#fff" stroke-width="2"/>
+    <!-- Tail Fin -->
+    <polygon points="-140,-6 -100,-6 -135,-65 -160,-65" fill="#1f78b4"/>
+    <!-- Tail Fin Accent -->
+    <polygon points="-130,-12 -105,-12 -128,-55 -145,-55" fill="#ffd166"/>
+    <!-- Passenger Windows -->
+    <line x1="-80" y1="-2" x2="100" y2="-2" stroke="#333" stroke-width="3" stroke-dasharray="4 6"/>
+  </g>
+
+  <!-- Photo border & vintage vignette -->
+  <rect width="900" height="600" fill="none" stroke="#f4efe6" stroke-width="16" rx="20"/>
+</svg>
