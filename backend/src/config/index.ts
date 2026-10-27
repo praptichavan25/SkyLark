@@ -2,22 +2,48 @@ import fs from 'fs';
 import path from 'path';
 import dotenv from 'dotenv';
 
-// Load .env from workspace root or backend root (does nothing on Render where vars are injected)
-const rootEnv = path.resolve(process.cwd(), '.env');
-const backendEnv = path.resolve(__dirname, '../../.env');
-const localEnv = path.resolve(__dirname, '../.env');
+// 1. Detect environment
+const isRender = Boolean(process.env.RENDER);
+const explicitEnv = process.env.NODE_ENV;
 
-if (fs.existsSync(rootEnv)) {
-  dotenv.config({ path: rootEnv, override: false });
-} else if (fs.existsSync(backendEnv)) {
-  dotenv.config({ path: backendEnv, override: false });
-} else if (fs.existsSync(localEnv)) {
-  dotenv.config({ path: localEnv, override: false });
+// Only load local .env files in local development — never in Render or production
+if (!isRender && explicitEnv !== 'production') {
+  const rootEnv = path.resolve(process.cwd(), '.env');
+  const backendEnv = path.resolve(__dirname, '../../.env');
+  const localEnv = path.resolve(__dirname, '../.env');
+
+  if (fs.existsSync(rootEnv)) {
+    dotenv.config({ path: rootEnv, override: false });
+  } else if (fs.existsSync(backendEnv)) {
+    dotenv.config({ path: backendEnv, override: false });
+  } else if (fs.existsSync(localEnv)) {
+    dotenv.config({ path: localEnv, override: false });
+  }
 }
 
-const isProduction = (process.env.NODE_ENV || 'development') === 'production';
+// 2. Determine environment mode
+// When running compiled JavaScript or on Render, default to 'production' if not explicitly set
+const isCompiled = !__filename.endsWith('.ts');
+const nodeEnv = process.env.NODE_ENV || (isRender || isCompiled ? 'production' : 'development');
+const isProduction = nodeEnv === 'production';
 
-// Find the frontend/dist directory across different execution contexts:
+// 3. Port resolution: Use process.env.PORT provided by Render, fallback to 5005 locally
+const rawPort = process.env.PORT;
+const port = rawPort ? parseInt(rawPort, 10) : 5005;
+
+// 4. Host resolution: In production (Render), ALWAYS bind to 0.0.0.0.
+// Avoid binding specifically to 127.0.0.1 or localhost in production.
+function resolveHost(): string {
+  if (isProduction || isRender) {
+    return '0.0.0.0';
+  }
+  // If explicitly overridden via HOST env var in development, use it; otherwise 0.0.0.0
+  return process.env.HOST || '0.0.0.0';
+}
+
+const host = resolveHost();
+
+// 5. Find the frontend/dist directory across different execution contexts:
 // 1. Explicit env var FRONTEND_DIST_PATH
 // 2. Relative to repository root when cwd is repo root: ./frontend/dist
 // 3. Relative to repository root when cwd is backend: ../frontend/dist
@@ -40,18 +66,15 @@ function resolveFrontendDist(): string {
     }
   }
 
-  // Default fallback if not yet built
+  // Default fallback
   return path.resolve(__dirname, '../../../frontend/dist');
 }
 
 export const config = {
-  port: parseInt(process.env.PORT || '5005', 10),
-
-  // In production (Render), bind to 0.0.0.0 so the platform can route traffic.
-  // In local dev, bind to 127.0.0.1 for security.
-  host: process.env.HOST || (isProduction ? '0.0.0.0' : '127.0.0.1'),
-
-  nodeEnv: process.env.NODE_ENV || 'development',
+  port,
+  host,
+  nodeEnv,
+  isProduction,
 
   // CORS origin — only needed when frontend and backend are on different origins.
   // Not required for same-origin production deployment.

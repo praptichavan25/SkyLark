@@ -12,7 +12,7 @@ import apiRouter from './routes/api';
 import { errorHandler } from './middleware/error.middleware';
 
 const app = express();
-const isProduction = config.nodeEnv === 'production';
+const isProduction = config.isProduction;
 
 // ── SECURITY HEADERS ──────────────────────────────────────────────────────────
 app.use((_req: Request, res: Response, next: NextFunction) => {
@@ -124,12 +124,12 @@ if (isProduction) {
 app.use(errorHandler);
 
 // ── SERVER STARTUP ────────────────────────────────────────────────────────────
-if (process.env.NODE_ENV !== 'test') {
+if (config.nodeEnv !== 'test') {
   const server = app.listen(config.port, config.host, () => {
     console.log(
       `✈️  Skylark API running on http://${config.host}:${config.port} [${config.nodeEnv}]`
     );
-    console.log(`   Health: http://${config.host}:${config.port}/api/health`);
+    console.log(`   Health check: http://${config.host}:${config.port}/api/health`);
     if (isProduction) {
       console.log(`   Frontend: http://${config.host}:${config.port}/`);
     }
@@ -138,10 +138,10 @@ if (process.env.NODE_ENV !== 'test') {
   server.on('error', (err: NodeJS.ErrnoException) => {
     if (err.code === 'EADDRINUSE') {
       console.error(
-        `❌ Port ${config.port} is already in use. Set a different PORT in your environment.`
+        `❌ Port ${config.port} is already in use on ${config.host}. Set a different PORT in your environment.`
       );
     } else {
-      console.error('❌ Server startup error:', err.message);
+      console.error(`❌ Server startup error on ${config.host}:${config.port} - ${err.message}`);
     }
     process.exit(1);
   });
